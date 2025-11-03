@@ -25,52 +25,52 @@ import java.util.stream.Collectors;
 
 @Service
 public class AuthService {
-    
+
     @Autowired
     private AuthenticationManager authenticationManager;
-    
+
     @Autowired
     private UserRepository userRepository;
-    
+
     @Autowired
     private PasswordEncoder passwordEncoder;
-    
+
     @Autowired
     private JwtUtils jwtUtils;
-    
+
     public JwtResponse authenticateUser(LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
-        
+
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateJwtToken(authentication);
-        
+
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .map(role -> role.replace("ROLE_", ""))
                 .collect(Collectors.toList());
-        
+
         User user = userRepository.findByUsername(userDetails.getUsername())
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        
+
         return new JwtResponse(jwt, userDetails.getUsername(), user.getEmail(), roles);
     }
-    
+
     public MessageResponse registerUser(SignupRequest signupRequest) {
         if (userRepository.existsByUsername(signupRequest.getUsername())) {
             return new MessageResponse("Error: Username is already taken!");
         }
-        
+
         if (userRepository.existsByEmail(signupRequest.getEmail())) {
             return new MessageResponse("Error: Email is already in use!");
         }
-        
+
         User user = new User();
         user.setUsername(signupRequest.getUsername());
         user.setEmail(signupRequest.getEmail());
         user.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
-        
+
         Set<String> roles = signupRequest.getRoles();
         if (roles == null || roles.isEmpty()) {
             roles = new HashSet<>();
@@ -79,9 +79,9 @@ public class AuthService {
         user.setRoles(roles);
         user.setCreatedAt(LocalDateTime.now());
         user.setUpdatedAt(LocalDateTime.now());
-        
+
         userRepository.save(user);
-        
+
         return new MessageResponse("User registered successfully!");
     }
 }
