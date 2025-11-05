@@ -26,7 +26,7 @@ jobs:
           distribution: "temurin"
           cache: maven
       - name: Build with Maven
-        run: /opt/maven/bin/mvn -B package -DskipTests --file pom.xml
+        run: mvn -B package -DskipTests --file pom.xml
       - name: Re deploy Spring Boot app
         run: |
           cd /home/ec2-user/spring/_work/agentic-inventory-management/agentic-inventory-management
