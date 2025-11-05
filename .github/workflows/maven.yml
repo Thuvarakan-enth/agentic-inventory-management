@@ -29,7 +29,7 @@ jobs:
         run: mvn -B package -DskipTests --file pom.xml
       - name: Re deploy Spring Boot app
         run: |
-          cd /home/ec2-user/spring/_work/agentic-inventory-management/agentic-inventory-management
+          cd /home/ubuntu/spring/_work/agentic-inventory-management/agentic-inventory-management
           tmux kill-session -t spring || true
           RUNNER_TRACKING_ID="" && tmux new -d -s spring "java -jar target/*.jar > app.log 2>&1"
 
