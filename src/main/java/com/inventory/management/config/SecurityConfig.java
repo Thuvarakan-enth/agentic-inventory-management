@@ -84,7 +84,7 @@ public class SecurityConfig {
 
         // 🔒 Use explicit origin — "*" will fail if you use credentials or auth headers
         // configuration.setAllowedOrigins(List.of(clientUrl));
-        configuration.setAllowedOrigins(List.of("43.204.141.135", "http://localhost:5173"));
+        configuration.setAllowedOrigins(List.of("http://43.204.141.135", "http://localhost:5173"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
