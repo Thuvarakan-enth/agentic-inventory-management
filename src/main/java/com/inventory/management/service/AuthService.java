@@ -82,12 +82,12 @@ public class AuthService {
         user.setCreatedAt(LocalDateTime.now());
         user.setUpdatedAt(LocalDateTime.now());
 
-        userRepository.save(user);
+        User u = userRepository.save(user);
 
         // Automatically authenticate the user after successful registration
         LoginRequest loginRequest = new LoginRequest();
-        loginRequest.setUsername(signupRequest.getUsername());
-        loginRequest.setPassword(signupRequest.getPassword());
+        loginRequest.setUsername(u.getUsername());
+        loginRequest.setPassword(u.getPassword());
 
         return authenticateUser(loginRequest);
     }
